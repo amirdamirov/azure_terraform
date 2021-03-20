@@ -1,3 +1,10 @@
+# STEPS
+1) Git init, craete .gitignore file
+2) Create RG, run terraform init. 
+3) Create SA store your state in remote location
+
+# Before creating git repo add some files to the .gitignore files. Check .gitignore files to see which files. 
+
 Terraform must authenticate to Azure to create infrastructure.
 In your terminal, use the Azure CLI tool to setup your account permissions locally.
 
