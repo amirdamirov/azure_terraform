@@ -1,6 +1,6 @@
 #!/bin/bash
 # https://docs.microsoft.com/en-us/azure/developer/terraform/store-state-in-azure-storage
-# This script will create storage account for save terraform state file in remote storage
+# This script will create storage account for saving terraform state file in remote storage
 
 RESOURCE_GROUP_NAME=myDEVResourceGroup
 STORAGE_ACCOUNT_NAME=tstate$RANDOM
