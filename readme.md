@@ -1,4 +1,6 @@
 #### STEPS
+
+
 # Before creating git repo add some files to the .gitignore files. Check .gitignore files to see which files. 
 
 1) Git init, craete .gitignore file
