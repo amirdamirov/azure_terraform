@@ -10,6 +10,8 @@
 
 # SSH Keys
 *.pem
+id_rsa.pub
+id_rsa
 
 # Ignored vscode files
 .vscode/

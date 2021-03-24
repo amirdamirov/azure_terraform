@@ -36,3 +36,21 @@ Your browser window will open and you will be prompted to enter your Azure login
 To review the information in your state file, use the state command. If you have a long state file, you can see a list of the resources you created with Terraform by using the list subcommand.
 $ terraform state list
 
+
+### Syntax examples
+# variable example
+
+variable "myvar" {
+    type = "string"     # Define type of the variable
+    default = "Salam aleykum Hagrid"
+}
+
+variable "mymap" {
+    type = map(string)  
+    default = "my value"
+}
+
+variable "mylist" {
+    type = list  
+    default = [1,2,3]
+}
