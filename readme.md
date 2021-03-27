@@ -3,9 +3,9 @@
 
 ### Before creating git repo add some files to the .gitignore files. Check .gitignore files to see which files. 
 
-1) Git init, craete .gitignore file
+1) Git init, create .gitignore file
 2) Create RG, run terraform init. 
-3) Create SA store your state in remote location
+3) Create Storage Account to store your state in remote location
 
 ### Information
 
