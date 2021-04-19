@@ -19,7 +19,7 @@ resource "azurerm_lb" "lbstandart" {
   }
 }
 
-resource "azurerm_lb_backend_address_pool" "lb-backend-pool" {
+resource "azurerm_lb_backend_address_pool" "lb-backend-pool" {              
   loadbalancer_id =  azurerm_lb.lbstandart.id
   name            = "lb-backend-pool"
 }
