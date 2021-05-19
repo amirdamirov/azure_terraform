@@ -54,3 +54,24 @@ variable "mylist" {
     type = list  
     default = [1,2,3]
 }
+
+
+
+### Conditional 
+# Example conditional expression
+variable "filename" {
+  type    = string
+  default = ""
+}
+
+
+resource "azurerm_storage_blob" "training-file" {
+  # Example conditional expression
+  name                   = var.filename != "" ? var.filename : "trainingfile.txt"
+  storage_account_name   = azurerm_storage_account.trainingsa.name
+  storage_container_name = azurerm_storage_container.trainingco.name
+  type                   = "Block"
+  # Example conditional expression
+  source = var.filename != "" ? var.filename : "trainingfile.txt"   # IF VARIABLE FILE NAME IS NOT EMPTY USE VALUE FROM VARIABLE ITSELF OTHERWISE ASSIGN VALUE FROM THIS EXPRESSION
+}
+
