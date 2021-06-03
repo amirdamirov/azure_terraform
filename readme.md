@@ -10,7 +10,7 @@
 ### Information
 
 main.tf                                 >>>  Main configuration files
-vars.tf                                 >>>  Variable declaring here
+vars.tf                                 >>>  Variable declaring files
 terraform.tfvars or *.auto.tfvars       >>>  Terraform can populate variables using values from a file. Terraform automatically loads them from these files to populate variables
 
 

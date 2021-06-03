@@ -4,6 +4,8 @@
 *.tfstate.backup
 *.tfstate.lock.info
 
+# k8s config
+aks/kubeconfig
 
 # Directories
 .terraform/
