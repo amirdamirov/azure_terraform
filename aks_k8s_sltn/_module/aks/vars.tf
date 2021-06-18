@@ -6,3 +6,7 @@ variable "env_name" {
   description = "The environment for the AKS cluster"
   default     = "basic"
 }
+variable "location" {
+  description = "The environment for the AKS cluster"
+  default     = "northeurope"
+}

@@ -4,6 +4,7 @@ resource "azurerm_kubernetes_cluster" "dev" {
   resource_group_name     = azurerm_resource_group.k8srg.name
   dns_prefix              = "devaks"
   private_cluster_enabled = true
+  #node_resource_group     = nodesdev
   
  
 
@@ -18,6 +19,14 @@ resource "azurerm_kubernetes_cluster" "dev" {
     max_count            = 3
     min_count            = 1
     vnet_subnet_id       = azurerm_subnet.akssubnet.id
+  }
+
+  network_profile {
+    docker_bridge_cidr = "172.17.0.1/16"
+    dns_service_ip     = "10.2.0.10"
+    network_plugin     = "azure"
+    outbound_type      = "userDefinedRouting"
+    service_cidr       = "10.2.0.0/24"
   }
 
   identity {

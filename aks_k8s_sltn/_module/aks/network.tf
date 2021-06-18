@@ -46,55 +46,55 @@ resource "azurerm_subnet" "bastionsubnet" {
 #   }
 # }
 
-resource "azurerm_public_ip" "azure_fw_ip" {
-  name                = "azure_fw_ip"
-  resource_group_name = azurerm_resource_group.k8srg.name
-  location            = azurerm_resource_group.k8srg.location
-  allocation_method   = "Static"
-  sku                 = "Standard"
+# resource "azurerm_public_ip" "azure_fw_ip" {
+#   name                = "azure_fw_ip"
+#   resource_group_name = azurerm_resource_group.k8srg.name
+#   location            = azurerm_resource_group.k8srg.location
+#   allocation_method   = "Static"
+#   sku                 = "Standard"
 
-}
-resource "azurerm_firewall" "aks_frwl" {
-  name                = "aks_frwl"
-  location            = azurerm_resource_group.k8srg.location
-  resource_group_name = azurerm_resource_group.k8srg.name
-  zones               = [1, 2 ,3]
+# }
+# resource "azurerm_firewall" "aks_frwl" {
+#   name                = "aks_frwl"
+#   location            = azurerm_resource_group.k8srg.location
+#   resource_group_name = azurerm_resource_group.k8srg.name
+#   zones               = [1, 2 ,3]
 
-  ip_configuration {
-    name                 = "configuration"
-    subnet_id            = azurerm_subnet.AzureFirewallSubnet.id
-    public_ip_address_id = azurerm_public_ip.azure_fw_ip.id
-  }
-}
+#   ip_configuration {
+#     name                 = "configuration"
+#     subnet_id            = azurerm_subnet.AzureFirewallSubnet.id
+#     public_ip_address_id = azurerm_public_ip.azure_fw_ip.id
+#   }
+# }
 
-resource "azurerm_firewall_network_rule_collection" "aks_egress_dns" {
-  name                = "aks_egress_dns"
-  azure_firewall_name = azurerm_firewall.aks_frwl.name
-  resource_group_name = azurerm_resource_group.k8srg.name
-  priority            = 100
-  action              = "Allow"
+# resource "azurerm_firewall_network_rule_collection" "aks_egress_dns" {
+#   name                = "aks_egress_dns"
+#   azure_firewall_name = azurerm_firewall.aks_frwl.name
+#   resource_group_name = azurerm_resource_group.k8srg.name
+#   priority            = 100
+#   action              = "Allow"
 
-  rule {
-    name = "aks_egress_dns"
+#   rule {
+#     name = "aks_egress_dns"
 
-    source_addresses = [
-      "*",
-    ]
+#     source_addresses = [
+#       "*",
+#     ]
 
-    destination_ports = [
-      "53",
-    ]
+#     destination_ports = [
+#       "53",
+#     ]
 
-    destination_addresses = [
-      "8.8.8.8",
-      "8.8.4.4",
-    ]
+#     destination_addresses = [
+#       "8.8.8.8",
+#       "8.8.4.4",
+#     ]
 
-    protocols = [
-      "UDP",
-    ]
-  }
-}
+#     protocols = [
+#       "UDP",
+#     ]
+#   }
+# }
 
 # resource "azurerm_firewall_network_rule_collection" "aks_egress_ntp" {
 #   name                = "aks_egress_ntp"
@@ -125,117 +125,117 @@ resource "azurerm_firewall_network_rule_collection" "aks_egress_dns" {
 # }
 
 
-resource "azurerm_firewall_application_rule_collection" "aks_ntp_rule" {
-  name                = "aks_ntp_rule"
-  azure_firewall_name = azurerm_firewall.aks_frwl.name
-  resource_group_name = azurerm_resource_group.k8srg.name
-  priority            = 102
-  action              = "Allow"
+# resource "azurerm_firewall_application_rule_collection" "aks_ntp_rule" {
+#   name                = "aks_ntp_rule"
+#   azure_firewall_name = azurerm_firewall.aks_frwl.name
+#   resource_group_name = azurerm_resource_group.k8srg.name
+#   priority            = 102
+#   action              = "Allow"
 
-  rule {
-    name             = "allow network"
-    source_addresses = ["*"]
+#   rule {
+#     name             = "allow network"
+#     source_addresses = ["*"]
 
-    target_fqdns = [
-       "ntp.ubuntu.com"
-    ]
+#     target_fqdns = [
+#        "ntp.ubuntu.com"
+#     ]
 
-    protocol {
-      port = "123"
-      type = "Http"
-    }
-  }
-}
+#     protocol {
+#       port = "123"
+#       type = "Http"
+#     }
+#   }
+# }
 
 
-resource "azurerm_firewall_application_rule_collection" "aks_app_rules" {
-  name                = "aks_app_rules"
-  azure_firewall_name = azurerm_firewall.aks_frwl.name
-  resource_group_name = azurerm_resource_group.k8srg.name
-  priority            = 103
-  action              = "Allow"
+# resource "azurerm_firewall_application_rule_collection" "aks_app_rules" {
+#   name                = "aks_app_rules"
+#   azure_firewall_name = azurerm_firewall.aks_frwl.name
+#   resource_group_name = azurerm_resource_group.k8srg.name
+#   priority            = 103
+#   action              = "Allow"
 
-  rule {
-    name             = "allow network"
-    source_addresses = ["*"]
+#   rule {
+#     name             = "allow network"
+#     source_addresses = ["*"]
 
-    target_fqdns = [
-      "*.cdn.mscr.io",
-      "mcr.microsoft.com",
-      "*.data.mcr.microsoft.com",
-      "management.azure.com",
-      "login.microsoftonline.com",
-      "acs-mirror.azureedge.net",
-      "dc.services.visualstudio.com",
-      "*.opinsights.azure.com",
-      "*.oms.opinsights.azure.com",
-      "*.microsoftonline.com",
-      "*.monitoring.azure.com",
-      "packages.microsoft.com",
-      "security.ubuntu.com",
-      "azure.archive.ubuntu.com",
-      "changelogs.ubuntu.com",
-      "data.policy.core.windows.net",
-      "store.policy.core.windows.net",
-      "dc.services.visualstudio.com"
-    ]
+#     target_fqdns = [
+#       "*.cdn.mscr.io",
+#       "mcr.microsoft.com",
+#       "*.data.mcr.microsoft.com",
+#       "management.azure.com",
+#       "login.microsoftonline.com",
+#       "acs-mirror.azureedge.net",
+#       "dc.services.visualstudio.com",
+#       "*.opinsights.azure.com",
+#       "*.oms.opinsights.azure.com",
+#       "*.microsoftonline.com",
+#       "*.monitoring.azure.com",
+#       "packages.microsoft.com",
+#       "security.ubuntu.com",
+#       "azure.archive.ubuntu.com",
+#       "changelogs.ubuntu.com",
+#       "data.policy.core.windows.net",
+#       "store.policy.core.windows.net",
+#       "dc.services.visualstudio.com"
+#     ]
 
-    protocol {
-      port = "80"
-      type = "Http"
-    }
+#     protocol {
+#       port = "80"
+#       type = "Http"
+#     }
 
-    protocol {
-      port = "443"
-      type = "Https"
-    }
-  }
-}
+#     protocol {
+#       port = "443"
+#       type = "Https"
+#     }
+#   }
+# }
 
-resource "azurerm_firewall_network_rule_collection" "servicetags" {
-  name                = "servicetags"
-  azure_firewall_name = azurerm_firewall.aks_frwl.name
-  resource_group_name = azurerm_resource_group.k8srg.name
-  priority            = 110
-  action              = "Allow"
+# resource "azurerm_firewall_network_rule_collection" "servicetags" {
+#   name                = "servicetags"
+#   azure_firewall_name = azurerm_firewall.aks_frwl.name
+#   resource_group_name = azurerm_resource_group.k8srg.name
+#   priority            = 110
+#   action              = "Allow"
 
-  rule {
-    description       = "allow service tags"
-    name              = "allow service tags"
-    source_addresses  = ["*"]
-    destination_ports = ["*"]
-    protocols         = ["Any"]
+#   rule {
+#     description       = "allow service tags"
+#     name              = "allow service tags"
+#     source_addresses  = ["*"]
+#     destination_ports = ["*"]
+#     protocols         = ["Any"]
 
-    destination_addresses = [
-      "AzureContainerRegistry",
-      "MicrosoftContainerRegistry",
-      "AzureActiveDirectory",
-      "AzureMonitor"
-    ]
-  }
-}
+#     destination_addresses = [
+#       "AzureContainerRegistry",
+#       "MicrosoftContainerRegistry",
+#       "AzureActiveDirectory",
+#       "AzureMonitor"
+#     ]
+#   }
+# }
 
-resource "azurerm_route_table" "fw_aks" {
-  name                          = "fw_aks"
-  location            = azurerm_resource_group.k8srg.location
-  resource_group_name = azurerm_resource_group.k8srg.name
-  disable_bgp_route_propagation = false
+# resource "azurerm_route_table" "fw_aks" {
+#   name                          = "fw_aks"
+#   location            = azurerm_resource_group.k8srg.location
+#   resource_group_name = azurerm_resource_group.k8srg.name
+#   disable_bgp_route_propagation = false
 
-  route {
-    name           = "fw_aks"
-    address_prefix = "0.0.0.0/0"
-    next_hop_type  = "VirtualAppliance"
-    next_hop_in_ip_address = azurerm_firewall.aks_frwl.ip_configuration.0.private_ip_address
-  }
+#   route {
+#     name           = "fw_aks"
+#     address_prefix = "0.0.0.0/0"
+#     next_hop_type  = "VirtualAppliance"
+#     next_hop_in_ip_address = azurerm_firewall.aks_frwl.ip_configuration.0.private_ip_address
+#   }
   
-  depends_on = [azurerm_firewall.aks_frwl]
+#   depends_on = [azurerm_firewall.aks_frwl]
 
-    # AKS may add routes Terraform is not aware of (e.g. kubelet networking mode)
-  lifecycle {
-    ignore_changes             = [route]
-  }  
+#     # AKS may add routes Terraform is not aware of (e.g. kubelet networking mode)
+#   lifecycle {
+#     ignore_changes             = [route]
+#   }  
 
-}
+# }
 
 
 resource "azurerm_virtual_network" "spokeVnetAddress" {
@@ -251,6 +251,7 @@ resource "azurerm_subnet" "akssubnet" {
   resource_group_name  = azurerm_resource_group.k8srg.name
   virtual_network_name = azurerm_virtual_network.spokeVnetAddress.name
   address_prefixes     = ["10.240.0.0/22"]
+  enforce_private_link_endpoint_network_policies = true
 }
 
 resource "azurerm_subnet" "akslbsubnet" {
@@ -274,3 +275,13 @@ resource "azurerm_virtual_network_peering" "spokeVnet" {
   remote_virtual_network_id = azurerm_virtual_network.hubVnetAddress.id
 }
 
+resource "azurerm_private_dns_zone_virtual_network_link" "link_to_hub_vnet" {
+  name = "link_to_hub_vnet"
+  # The Terraform language does not support user-defined functions, and so only the functions built in to the language are available for use.
+  # The below code gets the private dns zone name from the fqdn, by slicing the out dns prefix
+  private_dns_zone_name = join(".", slice(split(".", azurerm_kubernetes_cluster.dev.private_fqdn), 1, length(split(".", azurerm_kubernetes_cluster.dev.private_fqdn))))
+  resource_group_name   = "mc_${azurerm_resource_group.k8srg.name}_${azurerm_kubernetes_cluster.dev.name}_${azurerm_resource_group.k8srg.location}"
+  virtual_network_id    = azurerm_virtual_network.hubVnetAddress.id
+
+   depends_on = [azurerm_kubernetes_cluster.dev]
+}
