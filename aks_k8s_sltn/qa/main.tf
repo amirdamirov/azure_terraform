@@ -1,6 +1,5 @@
-module "k8s" {
-  source       = "../_module"
-  cluster_name = "aks"
-  env_name     = "qa"
-
+module "qa_k8s" {
+  source       = "../modules/aks"
+  env          = "qa"
+  location     = "northeurope"
 }

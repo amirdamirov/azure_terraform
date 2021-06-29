@@ -1,8 +1,8 @@
 resource "azurerm_kubernetes_cluster" "dev" {
-  name                    = "dev"
+  name                    = var.env
   location                = azurerm_resource_group.k8srg.location
   resource_group_name     = azurerm_resource_group.k8srg.name
-  dns_prefix              = "devaks"
+  dns_prefix              = "${var.env}aks"
   private_cluster_enabled = true
   #node_resource_group     = nodesdev
   
@@ -15,9 +15,6 @@ resource "azurerm_kubernetes_cluster" "dev" {
     node_count = 3
     vm_size    = "Standard_D2_v2"
     availability_zones   = [1, 2, 3]
-    enable_auto_scaling  = true
-    max_count            = 3
-    min_count            = 1
     vnet_subnet_id       = azurerm_subnet.akssubnet.id
   }
 
@@ -48,7 +45,7 @@ resource "azurerm_kubernetes_cluster" "dev" {
     Environment = "Develop"
   }
 
-  depends_on = [azurerm_subnet.akssubnet]
+  depends_on = [azurerm_subnet_route_table_association.akstofw]
 
 }
 
